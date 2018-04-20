@@ -2,7 +2,7 @@ import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
-let win, serve;
+let win, serve, tray;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
@@ -16,13 +16,15 @@ function createWindow() {
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
+  const iconDockPath = path.join(__dirname, './icon-dock.png');
 
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
     y: 0,
     width: size.width,
-    height: size.height
+    height: size.height,
+    icon: iconDockPath
   });
 
   if (serve) {
@@ -53,7 +55,9 @@ try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  app.on('ready', createWindow);
+  app.on('ready', () => {
+      createWindow();
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
